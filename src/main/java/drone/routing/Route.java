@@ -2,7 +2,6 @@ package drone.routing;
 
 import drone.common.StepFailedException;
 
-/** Entity of subsystem A. RESERVED -> CLOSED or RESERVED -> RELEASED, nothing else. */
 public class Route {
     public enum Status { RESERVED, CLOSED, RELEASED }
 

@@ -7,7 +7,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Tiny CSV-like file ("a;b;c" per line). Every read/write goes to disk. */
 public class FileTable {
     private final Path file;
 
@@ -37,7 +36,6 @@ public class FileTable {
         return rows;
     }
 
-    /** Insert the row, or replace the existing row with the same first column (the id). */
     public void upsert(String[] row) {
         List<String[]> rows = readAll();
         boolean replaced = false;

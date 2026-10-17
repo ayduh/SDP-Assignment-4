@@ -9,7 +9,6 @@ import drone.facade.Stage;
 import java.nio.file.Path;
 import java.util.Scanner;
 
-/** Console demo. The client only talks to the two facades. */
 public class Main {
     public static void main(String[] args) {
         DroneSystem system = new DroneSystem(Path.of(args.length > 0 ? args[0] : "data"));

@@ -8,7 +8,6 @@ import drone.loadout.LoadoutService;
 import drone.routing.Route;
 import drone.routing.RouteService;
 
-/** Facade 1: the client workflow. One call drives A (route) -> B (loadout) -> C (landing). */
 public class DispatchFacade {
     private final RouteService routes;
     private final LoadoutService loadouts;
@@ -26,7 +25,6 @@ public class DispatchFacade {
         this.compensator = compensator;
     }
 
-    /** Next dispatch will "crash" right after this stage has been persisted (demo / tests). */
     public void crashAfter(Stage stage) { this.crashAfter = stage; }
 
     public DispatchRecord dispatch(String destination, double payloadKg) {
@@ -39,7 +37,6 @@ public class DispatchFacade {
         DispatchRecord record = log.create(destination.trim().toUpperCase(), payloadKg);
         String ref = record.ref();
 
-        // Step A: nothing is committed yet, so a failure here needs no compensation.
         Route route;
         try {
             route = routes.reserve(ref, record.getDestination());
@@ -54,7 +51,6 @@ public class DispatchFacade {
         log.save(record);
         crashPoint(Stage.A);
 
-        // Step B: if it fails, only A is committed -> undo A.
         Loadout loadout;
         try {
             loadout = loadouts.allocate(ref, route.getDistanceKm(), record.getPayloadKg());
@@ -67,7 +63,6 @@ public class DispatchFacade {
         log.save(record);
         crashPoint(Stage.B);
 
-        // Step C: if it fails, A and B are committed -> undo B, then A.
         Landing landing;
         try {
             landing = landings.book(ref, record.getDestination());
@@ -78,7 +73,6 @@ public class DispatchFacade {
         }
         record.setLandingId(landing.getId());
 
-        // Finalize everything.
         routes.close(route.getId());
         loadouts.commit(loadout.getId());
         record.setCode(landings.confirm(landing.getId()));

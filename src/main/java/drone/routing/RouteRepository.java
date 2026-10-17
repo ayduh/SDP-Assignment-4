@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-/** Persistence gateway of subsystem A (data/routes.csv). */
 public class RouteRepository {
     private final FileTable table;
 

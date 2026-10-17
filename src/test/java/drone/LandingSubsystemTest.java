@@ -14,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-/** Subsystem C used completely on its own. */
 class LandingSubsystemTest {
     private LandingService service;
 
@@ -46,7 +45,7 @@ class LandingSubsystemTest {
     void cancelledLandingCannotBeConfirmed() {
         Landing l = service.book("X1", "CAMPUS");
         service.cancelByRef("X1");
-        service.cancelByRef("X1"); // idempotent
+        service.cancelByRef("X1");
         assertThrows(StepFailedException.class, () -> service.confirm(l.getId()));
     }
 

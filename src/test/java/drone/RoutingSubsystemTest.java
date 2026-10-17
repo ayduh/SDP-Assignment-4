@@ -14,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-/** Subsystem A used completely on its own (no B, no C, no facade). */
 class RoutingSubsystemTest {
     private RouteService service;
     private Path dir;
@@ -56,7 +55,7 @@ class RoutingSubsystemTest {
         Route r = service.reserve("X1", "CAMPUS");
         service.close(r.getId());
         assertThrows(StepFailedException.class, () -> service.get(r.getId()).release());
-        service.releaseByRef("X1"); // idempotent no-op
+        service.releaseByRef("X1");
         assertEquals(Route.Status.CLOSED, service.get(r.getId()).getStatus());
     }
 

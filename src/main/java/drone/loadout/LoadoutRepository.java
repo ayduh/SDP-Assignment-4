@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-/** Persistence gateway of subsystem B (data/loadouts.csv). */
 public class LoadoutRepository {
     private final FileTable table;
 

@@ -14,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-/** Subsystem B used completely on its own. */
 class LoadoutSubsystemTest {
     private LoadoutService service;
 
@@ -46,7 +45,7 @@ class LoadoutSubsystemTest {
         Loadout l = service.allocate("X1", 5.0, 1.0);
         service.commit(l.getId());
         assertThrows(StepFailedException.class, () -> service.get(l.getId()).release());
-        service.releaseByRef("X1"); // no-op because already COMMITTED
+        service.releaseByRef("X1");
         assertEquals(Loadout.Status.COMMITTED, service.get(l.getId()).getStatus());
     }
 

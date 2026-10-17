@@ -13,7 +13,6 @@ import drone.loadout.Loadout;
 import drone.routing.Route;
 import java.nio.file.Path;
 
-/** Small domain-specific testing language: tests read like sentences about drones. */
 final class DroneWorld {
     private final Path dir;
     private DroneSystem system;
@@ -33,7 +32,6 @@ final class DroneWorld {
 
     DroneWorld crashAfter(Stage stage) { system.dispatch().crashAfter(stage); return this; }
 
-    /** Simulates stopping and restarting the application: everything is re-read from disk. */
     DroneWorld restart() { system = new DroneSystem(dir); return this; }
 
     DispatchRecord delivers(String destination, double kg) { return system.dispatch().dispatch(destination, kg); }

@@ -18,7 +18,6 @@ import drone.routing.RouteService;
 import drone.routing.WeatherChecker;
 import java.nio.file.Path;
 
-/** Wires everything together on top of one data directory. Creating a new one = restarting the app. */
 public class DroneSystem {
     private final RouteService routes;
     private final LoadoutService loadouts;
@@ -40,7 +39,6 @@ public class DroneSystem {
 
     public AdminFacade admin() { return adminFacade; }
 
-    // Direct access to the subsystems: only for tests and the standalone demonstrations.
     public RouteService routes() { return routes; }
 
     public LoadoutService loadouts() { return loadouts; }

@@ -35,7 +35,6 @@ class DispatchFacadeTest {
                 .landingOf("D1", Landing.Status.CONFIRMED);
     }
 
-    /** Compensation depth 1: B fails after A committed -> only A is undone. */
     @Test
     void whenBFailsOnlyARouteIsUndone() {
         DispatchFailedException e = world.deliveryFails("CAMPUS", 8.0);
@@ -47,7 +46,6 @@ class DispatchFacadeTest {
                 .noLandingFor("D1");
     }
 
-    /** Compensation depth 2: C fails after A and B committed -> B then A are undone. */
     @Test
     void whenCFailsLoadoutAndRouteAreUndone() {
         world.padBlockedAt("CAMPUS");
@@ -93,7 +91,6 @@ class DispatchFacadeTest {
         assertEquals("D2", world.delivers("MALL", 1.0).ref());
     }
 
-    /** Persistence-reload: crash after B, restart, the facade reads the disk and unwinds B then A. */
     @Test
     void crashAfterBIsRecoveredFromPersistedStatus() {
         world.crashAfter(Stage.B);

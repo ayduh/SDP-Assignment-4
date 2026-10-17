@@ -4,7 +4,6 @@ import drone.common.StepFailedException;
 import java.util.List;
 import java.util.Optional;
 
-/** Entry point of subsystem B (battery + payload). Knows nothing about A or C. */
 public class LoadoutService {
     private final BatteryManager battery;
     private final PayloadSensor sensor;
@@ -31,7 +30,6 @@ public class LoadoutService {
         repository.save(loadout);
     }
 
-    /** Idempotent: releases the loadout only if it is still ALLOCATED. */
     public void releaseByRef(String orderRef) {
         repository.findByRef(orderRef).ifPresent(loadout -> {
             if (loadout.getStatus() == Loadout.Status.ALLOCATED) {

@@ -4,7 +4,6 @@ import drone.common.StepFailedException;
 import java.util.List;
 import java.util.Optional;
 
-/** Entry point of subsystem A (route planner + weather). Knows nothing about B or C. */
 public class RouteService {
     private final RoutePlanner planner;
     private final WeatherChecker weather;
@@ -32,7 +31,6 @@ public class RouteService {
         repository.save(route);
     }
 
-    /** Idempotent: releases the route only if it is still RESERVED. */
     public void releaseByRef(String orderRef) {
         repository.findByRef(orderRef).ifPresent(route -> {
             if (route.getStatus() == Route.Status.RESERVED) {

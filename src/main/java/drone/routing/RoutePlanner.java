@@ -3,7 +3,6 @@ package drone.routing;
 import drone.common.StepFailedException;
 import java.util.Map;
 
-/** Pure business logic: distance from the hub (0,0) to a known destination, in km. */
 public class RoutePlanner {
     private static final Map<String, double[]> PLACES = Map.of(
             "CAMPUS", new double[]{3, 4},

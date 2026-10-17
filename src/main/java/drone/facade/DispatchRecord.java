@@ -1,8 +1,7 @@
 package drone.facade;
 
-/** Persisted progress of one dispatch (one run of the A -> B -> C chain). */
 public class DispatchRecord {
-    /** PENDING_x = step x is the next one to run. */
+
     public enum Status { PENDING_A, PENDING_B, PENDING_C, COMPLETED, COMPENSATED, REJECTED }
 
     private final int id;
@@ -39,7 +38,6 @@ public class DispatchRecord {
                 status.name(), code, note.replace(';', ',')};
     }
 
-    /** Reference passed to every subsystem so each can find its own rows again. */
     public String ref() { return "D" + id; }
 
     public boolean isInProgress() {

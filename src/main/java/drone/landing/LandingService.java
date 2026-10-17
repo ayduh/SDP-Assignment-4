@@ -4,7 +4,6 @@ import drone.common.StepFailedException;
 import java.util.List;
 import java.util.Optional;
 
-/** Entry point of subsystem C (landing pad + confirmation). Knows nothing about A or B. */
 public class LandingService {
     static final String EXTERNAL_PREFIX = "EXT-";
 
@@ -30,7 +29,6 @@ public class LandingService {
         return landing;
     }
 
-    /** Confirms the delivery and returns the confirmation code. */
     public String confirm(int id) {
         Landing landing = get(id);
         landing.confirm(confirmation.codeFor(landing.getOrderRef()));
@@ -38,7 +36,6 @@ public class LandingService {
         return landing.getConfirmationCode();
     }
 
-    /** Idempotent: cancels the booking only if it is still BOOKED. */
     public void cancelByRef(String orderRef) {
         repository.findByRef(orderRef).ifPresent(landing -> {
             if (landing.getStatus() == Landing.Status.BOOKED) {
@@ -48,7 +45,6 @@ public class LandingService {
         });
     }
 
-    /** Simulates another operator's drone sitting on the pad. */
     public void blockPad(String destination) {
         book(EXTERNAL_PREFIX + repository.nextId(), destination);
     }

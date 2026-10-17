@@ -9,7 +9,6 @@ import drone.routing.RouteService;
 import java.util.List;
 import java.util.Optional;
 
-/** Facade 2: inspection, manual compensation, restart recovery and "what-if" switches. */
 public class AdminFacade {
     private final RouteService routes;
     private final LoadoutService loadouts;
@@ -28,7 +27,6 @@ public class AdminFacade {
 
     public List<DispatchRecord> list() { return log.findAll(); }
 
-    /** Shows the dispatch and what each subsystem has persisted for it. */
     public String inspect(int dispatchId) {
         DispatchRecord d = find(dispatchId);
         Optional<Route> r = routes.findByRef(d.ref());
@@ -42,7 +40,6 @@ public class AdminFacade {
                 + (d.getNote().isEmpty() ? "" : "  note     : " + d.getNote() + "\n");
     }
 
-    /** Manual compensation of a dispatch that is still in progress. */
     public void compensate(int dispatchId) {
         DispatchRecord d = find(dispatchId);
         if (!d.isInProgress()) {
@@ -51,11 +48,6 @@ public class AdminFacade {
         compensator.compensate(d, Stage.C, "manual compensation");
     }
 
-    /**
-     * Call at start-up: every dispatch left in PENDING_x by a crash is rolled back,
-     * undoing exactly what the subsystems have persisted (C, then B, then A).
-     * @return number of dispatches recovered
-     */
     public int recoverAll() {
         int count = 0;
         for (DispatchRecord d : log.findAll()) {

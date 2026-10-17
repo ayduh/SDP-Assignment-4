@@ -2,7 +2,6 @@ package drone.loadout;
 
 import drone.common.StepFailedException;
 
-/** Entity of subsystem B. ALLOCATED -> COMMITTED or ALLOCATED -> RELEASED, nothing else. */
 public class Loadout {
     public enum Status { ALLOCATED, COMMITTED, RELEASED }
 

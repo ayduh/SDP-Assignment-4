@@ -1,6 +1,5 @@
 package drone.facade;
 
-/** A step of the chain failed. The facade has already compensated what had been committed. */
 public class DispatchFailedException extends RuntimeException {
     private final DispatchRecord record;
     private final Stage failedStage;

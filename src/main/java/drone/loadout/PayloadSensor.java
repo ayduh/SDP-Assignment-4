@@ -2,7 +2,6 @@ package drone.loadout;
 
 import drone.common.StepFailedException;
 
-/** Pure business logic: is the measured payload acceptable? */
 public class PayloadSensor {
     public static final double MAX_KG = 5.0;
 

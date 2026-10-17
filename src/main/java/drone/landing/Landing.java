@@ -2,7 +2,6 @@ package drone.landing;
 
 import drone.common.StepFailedException;
 
-/** Entity of subsystem C. BOOKED -> CONFIRMED or BOOKED -> CANCELLED, nothing else. */
 public class Landing {
     public enum Status { BOOKED, CONFIRMED, CANCELLED }
 

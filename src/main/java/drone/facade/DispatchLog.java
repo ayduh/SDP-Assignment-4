@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-/** Persists the progress of every dispatch (data/dispatches.csv). */
 public class DispatchLog {
     private final FileTable table;
 
