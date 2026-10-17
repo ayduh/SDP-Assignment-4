@@ -1,0 +1,53 @@
+digraph G {
+  rankdir=TB; nodesep=0.35; ranksep=0.7; compound=true;
+  node [shape=record, fontname="Helvetica", fontsize=10, style=filled, fillcolor="#FFFFFF"];
+  edge [fontname="Helvetica", fontsize=9, arrowhead=vee];
+
+  Client [label="{Client (Main)|+ main()}", fillcolor="#E8E8E8"];
+
+  subgraph cluster_facade { label="Facade layer (drone.facade)"; style=filled; fillcolor="#FFF4D6"; fontname="Helvetica";
+    DispatchFacade [label="{DispatchFacade|- crashAfter : Stage|+ dispatch(destination, payloadKg) : DispatchRecord\l+ crashAfter(stage)\l}"];
+    AdminFacade [label="{AdminFacade|+ list()\l+ inspect(id) : String\l+ compensate(id)\l+ recoverAll() : int\l+ setWind(kmh)\l+ blockPad(dest) / freePads(dest)\l}"];
+    ChainCompensator [label="{ChainCompensator|+ compensate(record, lastCommitted, reason)\l}"];
+    DispatchLog [label="{DispatchLog|+ create() / save() / findAll() / findById()\l}"];
+    DispatchRecord [label="{DispatchRecord|id, destination, payloadKg\lrouteId, loadoutId, landingId\lstatus : PENDING_A/B/C, COMPLETED,\l   COMPENSATED, REJECTED\l|}"];
+  }
+
+  subgraph cluster_a { label="Subsystem A: routing"; style=filled; fillcolor="#DDEBFA"; fontname="Helvetica";
+    RouteService [label="{RouteService|+ reserve(ref, dest) : Route\l+ close(id)\l+ releaseByRef(ref)\l+ setWind(kmh)\l}"];
+    RoutePlanner [label="{RoutePlanner (logic)|+ distanceKm(dest)\l}"];
+    WeatherChecker [label="{WeatherChecker (logic)|+ isFlyable()\l}"];
+    RouteRepository [label="{RouteRepository (gateway)|+ save / findById / findByRef\l}"];
+    Route [label="{Route (entity)|status : RESERVED, CLOSED, RELEASED|+ close()\l+ release()\l}"];
+  }
+  subgraph cluster_b { label="Subsystem B: loadout"; style=filled; fillcolor="#DFF3DF"; fontname="Helvetica";
+    LoadoutService [label="{LoadoutService|+ allocate(ref, km, kg) : Loadout\l+ commit(id)\l+ releaseByRef(ref)\l}"];
+    BatteryManager [label="{BatteryManager (logic)|+ requiredPercent(km)\l+ assertEnough(p)\l}"];
+    PayloadSensor [label="{PayloadSensor (logic)|+ assertAcceptable(kg)\l}"];
+    LoadoutRepository [label="{LoadoutRepository (gateway)|+ save / findById / findByRef\l}"];
+    Loadout [label="{Loadout (entity)|status : ALLOCATED, COMMITTED, RELEASED|+ commit()\l+ release()\l}"];
+  }
+  subgraph cluster_c { label="Subsystem C: landing"; style=filled; fillcolor="#F6DDF0"; fontname="Helvetica";
+    LandingService [label="{LandingService|+ book(ref, dest) : Landing\l+ confirm(id) : String\l+ cancelByRef(ref)\l+ blockPad / freeBlockedPads\l}"];
+    LandingPadController [label="{LandingPadController (logic)|+ hasFreePad(active)\l}"];
+    DeliveryConfirmation [label="{DeliveryConfirmation (logic)|+ codeFor(ref)\l}"];
+    LandingRepository [label="{LandingRepository (gateway)|+ save / findById / findByRef\l}"];
+    Landing [label="{Landing (entity)|status : BOOKED, CONFIRMED, CANCELLED|+ confirm(code)\l+ cancel()\l}"];
+  }
+
+  Client -> DispatchFacade; Client -> AdminFacade;
+  DispatchFacade -> RouteService; DispatchFacade -> LoadoutService; DispatchFacade -> LandingService;
+  DispatchFacade -> DispatchLog; DispatchFacade -> ChainCompensator;
+  AdminFacade -> RouteService; AdminFacade -> LoadoutService; AdminFacade -> LandingService;
+  AdminFacade -> DispatchLog; AdminFacade -> ChainCompensator;
+  ChainCompensator -> RouteService; ChainCompensator -> LoadoutService; ChainCompensator -> LandingService;
+  ChainCompensator -> DispatchLog;
+  DispatchLog -> DispatchRecord [arrowhead=odiamond, dir=back, label="1..*"];
+
+  RouteService -> RoutePlanner; RouteService -> WeatherChecker; RouteService -> RouteRepository;
+  RouteRepository -> Route [style=dashed, label="stores"];
+  LoadoutService -> BatteryManager; LoadoutService -> PayloadSensor; LoadoutService -> LoadoutRepository;
+  LoadoutRepository -> Loadout [style=dashed, label="stores"];
+  LandingService -> LandingPadController; LandingService -> DeliveryConfirmation; LandingService -> LandingRepository;
+  LandingRepository -> Landing [style=dashed, label="stores"];
+}
